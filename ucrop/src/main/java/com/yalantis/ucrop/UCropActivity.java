@@ -19,13 +19,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yalantis.ucrop.callback.BitmapCropCallback;
+import com.yalantis.ucrop.helper.AspectRatioHelper;
 import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.util.SelectedStateListDrawable;
 import com.yalantis.ucrop.view.CropImageView;
@@ -424,40 +425,16 @@ public class UCropActivity extends AppCompatActivity {
     }
 
     private void setupAspectRatioWidget(@NonNull Intent intent) {
-
-        int aspectRationSelectedByDefault = intent.getIntExtra(UCrop.Options.EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT, 0);
-        ArrayList<AspectRatio> aspectRatioList = intent.getParcelableArrayListExtra(UCrop.Options.EXTRA_ASPECT_RATIO_OPTIONS);
-
-        if (aspectRatioList == null || aspectRatioList.isEmpty()) {
-            aspectRationSelectedByDefault = 2;
-
-            aspectRatioList = new ArrayList<>();
-            aspectRatioList.add(new AspectRatio(null, 1, 1));
-            aspectRatioList.add(new AspectRatio(null, 3, 4));
-            aspectRatioList.add(new AspectRatio(getString(R.string.ucrop_label_original).toUpperCase(),
-                    CropImageView.SOURCE_IMAGE_ASPECT_RATIO, CropImageView.SOURCE_IMAGE_ASPECT_RATIO));
-            aspectRatioList.add(new AspectRatio(null, 3, 2));
-            aspectRatioList.add(new AspectRatio(null, 16, 9));
-        }
-
+        final HorizontalScrollView scrollView = findViewById(R.id.container_scroll_aspect_ratio);
         LinearLayout wrapperAspectRatioList = findViewById(R.id.layout_aspect_ratio);
+        List<ViewGroup> resultAddedView = AspectRatioHelper.initAspectRatio(intent, wrapperAspectRatioList, mActiveControlsWidgetColor);
+        mCropAspectRatioViews.addAll(resultAddedView);
 
-        FrameLayout wrapperAspectRatio;
-        AspectRatioTextView aspectRatioTextView;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-        lp.weight = 1;
-        for (AspectRatio aspectRatio : aspectRatioList) {
-            wrapperAspectRatio = (FrameLayout) getLayoutInflater().inflate(R.layout.ucrop_aspect_ratio, null);
-            wrapperAspectRatio.setLayoutParams(lp);
-            aspectRatioTextView = ((AspectRatioTextView) wrapperAspectRatio.getChildAt(0));
-            aspectRatioTextView.setActiveColor(mActiveControlsWidgetColor);
-            aspectRatioTextView.setAspectRatio(aspectRatio);
-
-            wrapperAspectRatioList.addView(wrapperAspectRatio);
-            mCropAspectRatioViews.add(wrapperAspectRatio);
-        }
-
-        mCropAspectRatioViews.get(aspectRationSelectedByDefault).setSelected(true);
+        // make selected
+        int selectedAspectRatio = AspectRatioHelper.getAspectRatioSelected(intent);
+        final ViewGroup selectedDefaultView = mCropAspectRatioViews.get(selectedAspectRatio);
+        selectedDefaultView.setSelected(true);
+        AspectRatioHelper.scrollCenterAspectRatio(scrollView, selectedDefaultView);
 
         for (ViewGroup cropAspectRatioView : mCropAspectRatioViews) {
             cropAspectRatioView.setOnClickListener(new View.OnClickListener() {
@@ -470,6 +447,9 @@ public class UCropActivity extends AppCompatActivity {
                         for (ViewGroup cropAspectRatioView : mCropAspectRatioViews) {
                             cropAspectRatioView.setSelected(cropAspectRatioView == v);
                         }
+                    }
+                    if (!isFinishing()) {
+                        AspectRatioHelper.scrollCenterAspectRatio(scrollView, (ViewGroup) v);
                     }
                 }
             });

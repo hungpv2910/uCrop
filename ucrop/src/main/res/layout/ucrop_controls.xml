@@ -17,12 +17,23 @@
             android:layout_height="match_parent"
             android:background="@drawable/ucrop_wrapper_controls_shape" />
 
-        <LinearLayout
-            android:id="@+id/layout_aspect_ratio"
-            android:layout_width="match_parent"
+        <HorizontalScrollView
+            android:id="@+id/container_scroll_aspect_ratio"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:gravity="center"
-            android:orientation="horizontal" />
+            android:scrollbarSize="0dp">
+
+            <LinearLayout
+                android:id="@+id/layout_aspect_ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
         <include
             android:id="@+id/layout_rotate_wheel"

@@ -19,6 +19,17 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="ucrop_WrapperAspectRatioState">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
     <style name="ucrop_WrapperRotateButton">
         <item name="android:layout_width">@dimen/ucrop_size_wrapper_rotate_button</item>
         <item name="android:layout_height">@dimen/ucrop_size_wrapper_rotate_button</item>
