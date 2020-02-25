@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: '../mavenpush.gradle'
 
 android {
     compileSdkVersion 28
@@ -30,6 +29,7 @@ android {
     resourcePrefix 'ucrop_'
 
 }
+apply from: 'deploy.gradle'
 
 dependencies {
     implementation "androidx.appcompat:appcompat:${androidx_appcompat_version}"
